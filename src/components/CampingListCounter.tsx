@@ -1,5 +1,5 @@
 import { Card, CardContent, Typography } from "@suid/material";
-import { campingItemList } from "./store/store";
+import { campingItemList } from "../store/store";
 
 export default function CampingListCounter() {
     return (<Card>

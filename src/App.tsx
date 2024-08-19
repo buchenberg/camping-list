@@ -1,7 +1,7 @@
 import { AppBar, Box, Card, CardContent, Container, CssBaseline, Grid, Toolbar, Typography } from "@suid/material";
-import CampingItemList from "./CampingItemList";
+import CampingItemList from "./components/CampingItemList";
 import { campingItemList } from './store/store';
-import CampingListCounter from "./CampingListCounter";
+import CampingListCounter from "./components/CampingListCounter";
 
 export default function App() {
 
