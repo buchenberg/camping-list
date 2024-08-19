@@ -11,7 +11,6 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    ListItemButton,
     IconButton,
     Box
 } from "@suid/material";
@@ -20,16 +19,9 @@ import { ChangeEvent } from "@suid/types";
 import { campingItemList } from "../store/store";
 import DeleteIcon from '@suid/icons-material/Delete';
 import AddIcon from '@suid/icons-material/Add';
-
-export interface ICampingItem {
-    name: string;
-    uom: string;
-    qty: number;
-}
+import { ICampingItem } from "../store/ICampingItem";
 
 export default function CampingItemList() {
-
-    //const [campingList, { mutate, refetch }] = createResource(fetchCampingList);
     const [open, setOpen] = createSignal(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -62,11 +54,8 @@ export default function CampingItemList() {
             uom: uomValue(),
             qty: qtyValue()
         }
-        //mutate((campingList) => [...campingList, campingItem]);
-        campingItemList.addItem(campingItem);
 
-        // ..code to submit form to backend here...
-        console.log("Camping Item: ", campingItem);
+        campingItemList.addItem(campingItem);
         setIsSubmitting(false);
         handleClose();
     }
