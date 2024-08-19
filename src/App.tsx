@@ -1,6 +1,7 @@
 import { AppBar, Box, Card, CardContent, Container, CssBaseline, Grid, Toolbar, Typography } from "@suid/material";
 import CampingItemList from "./CampingItemList";
 import { campingItemList } from './store/store';
+import CampingListCounter from "./CampingListCounter";
 
 export default function App() {
 
@@ -36,11 +37,7 @@ export default function App() {
               <CampingItemList />
             </Grid>
             <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Typography align="center" mb={2} variant="h6">{campingItemList.count} Items</Typography>
-                </CardContent>
-              </Card>
+              <CampingListCounter/>
             </Grid>
           </Grid>
         </Container>
