@@ -35,7 +35,6 @@ export default function App() {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <CampingItemList />
-              wut
             </Grid>
             <Grid item xs={12}>
               <CampingListCounter/>

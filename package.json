@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy": "copyfiles -u 1 dist/index.html doc && copyfiles -u 1 dist/assets/** doc",
+    "deploy": "gh-pages -d dist",
     "serve": "vite preview"
   },
   "license": "MIT",
