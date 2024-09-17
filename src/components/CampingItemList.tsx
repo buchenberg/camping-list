@@ -20,6 +20,7 @@ import { campingItemList } from "../store/store";
 import DeleteIcon from '@suid/icons-material/Delete';
 import AddIcon from '@suid/icons-material/Add';
 import { ICampingItem } from "../store/ICampingItem";
+import { eventBus } from "../App";
 
 export default function CampingItemList() {
     const [open, setOpen] = createSignal(false);
@@ -56,13 +57,10 @@ export default function CampingItemList() {
         }
 
         campingItemList.addItem(campingItem);
+        eventBus.emit(`${campingItem.name} added!`);
         setIsSubmitting(false);
         handleClose();
     }
-
-    console.log(campingItemList.items);
-
-    console.log(campingItemList.count);
 
     return (
         <Paper
@@ -80,8 +78,8 @@ export default function CampingItemList() {
                         <ListItem
                             secondaryAction={
                                 <IconButton color="error" edge="end" aria-label="delete" onClick={() => {
-                                    console.log('onClick');
-                                    campingItemList.delete(item.name)
+                                    campingItemList.delete(item.name);
+                                    eventBus.emit(`${item.name} deleted!`);
                                 }}>
                                     <DeleteIcon />
                                 </IconButton>
@@ -95,7 +93,7 @@ export default function CampingItemList() {
                     }
                 </For>
             </List>
-            <Box  textAlign='center'>
+            <Box textAlign='center'>
                 <IconButton aria-label="add" onClick={handleOpen} color="success">
                     <AddIcon />
                 </IconButton>

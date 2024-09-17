@@ -21,6 +21,7 @@
     "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
+    "@solid-primitives/event-bus": "^1.0.11",
     "@suid/icons-material": "^0.7.0",
     "@suid/material": "^0.16.0",
     "@suid/vite-plugin": "^0.2.0",

@@ -1,12 +1,12 @@
 import { AppBar, Box, Card, CardContent, Container, CssBaseline, Grid, Toolbar, Typography } from "@suid/material";
 import CampingItemList from "./components/CampingItemList";
-import { campingItemList } from './store/store';
 import CampingListCounter from "./components/CampingListCounter";
+import { createEventBus } from "@solid-primitives/event-bus";
+import EventBusComponent from "./components/EventBusComponent";
+
+export const eventBus = createEventBus<string>();
 
 export default function App() {
-
-
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <CssBaseline />
@@ -15,10 +15,10 @@ export default function App() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Camping List
           </Typography>
+          <CampingListCounter />
         </Toolbar>
+
       </AppBar>
-
-
       <Box
         component="main"
         sx={{
@@ -34,10 +34,10 @@ export default function App() {
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <CampingItemList />
+            <EventBusComponent />
             </Grid>
             <Grid item xs={12}>
-              <CampingListCounter/>
+              <CampingItemList />
             </Grid>
           </Grid>
         </Container>

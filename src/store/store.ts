@@ -1,6 +1,7 @@
 import { createMutable } from "solid-js/store";
 import { ICampingItem } from "./ICampingItem";
 
+
 export const campingItemList = createMutable({
   items: JSON.parse(window.localStorage.getItem("items") ?? "[]"),
   get count() {
