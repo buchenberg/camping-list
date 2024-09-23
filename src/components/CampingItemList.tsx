@@ -70,7 +70,7 @@ export default function CampingItemList() {
                 flexDirection: 'column',
             }}>
             <Typography variant="h6" gutterBottom>
-                Items
+                Camping Items
             </Typography>
             <List>
                 <For each={campingItemList.items}>

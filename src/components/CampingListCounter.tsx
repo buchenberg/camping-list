@@ -3,6 +3,6 @@ import { campingItemList } from "../store/store";
 
 export default function CampingListCounter() {
     return (
-            <Typography m={2} variant="h6">{campingItemList.count} Items</Typography>
+            <Typography m={2} variant="h6">{campingItemList.count} Camping Items</Typography>
     )
 }
