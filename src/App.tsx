@@ -9,6 +9,10 @@ import { Restore, Favorite, LocationOn, Light, DarkMode, LightMode } from "@suid
 
 export const eventBus = createEventBus<string>();
 
+
+
+
+
 const theme = createTheme({
   palette: {
     primary: {

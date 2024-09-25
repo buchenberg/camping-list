@@ -1,8 +1,8 @@
 import { Card, CardContent, Typography } from "@suid/material";
-import { campingItemList } from "../store/store";
+import { campingItems } from "../store/campingItems";
 
 export default function CampingListCounter() {
     return (
-            <Typography m={2} variant="h6">{campingItemList.count} Camping Items</Typography>
+            <Typography m={2} variant="h6">{campingItems.count} Camping Items</Typography>
     )
 }

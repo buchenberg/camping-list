@@ -16,11 +16,11 @@ import {
 } from "@suid/material";
 import { createSignal, For } from "solid-js";
 import { ChangeEvent } from "@suid/types";
-import { campingItemList } from "../store/store";
 import DeleteIcon from '@suid/icons-material/Delete';
 import AddIcon from '@suid/icons-material/Add';
 import { ICampingItem } from "../store/ICampingItem";
 import { eventBus } from "../App";
+import { campingItems, IItem } from "../store/campingItems";
 
 export default function CampingItemList() {
     const [open, setOpen] = createSignal(false);
@@ -56,7 +56,7 @@ export default function CampingItemList() {
             qty: qtyValue()
         }
 
-        campingItemList.addItem(campingItem);
+        campingItems.addItem(campingItem);
         eventBus.emit(`${campingItem.name} added!`);
         setIsSubmitting(false);
         handleClose();
@@ -73,22 +73,22 @@ export default function CampingItemList() {
                 Camping Items
             </Typography>
             <List>
-                <For each={campingItemList.items}>
-                    {(item: ICampingItem) =>
+                <For each={campingItems.items}>
+                    {(item: IItem) =>
                         <ListItem
                             secondaryAction={
                                 <IconButton color="error" edge="end" aria-label="delete" onClick={() => {
-                                    campingItemList.delete(item.name);
-                                    eventBus.emit(`${item.name} deleted!`);
+                                    campingItems.delete(item.key);
+                                    eventBus.emit(`${item.value.name} deleted!`);
                                 }}>
                                     <DeleteIcon />
                                 </IconButton>
                             }>
                             <ListItemText primary={
                                 <Typography variant="h6" gutterBottom>
-                                    {item.name}
+                                    {item.value.name}
                                 </Typography>
-                            } secondary={`Qty: ${item.qty}`} />
+                            } secondary={`Qty: ${item.value.qty}`} />
                         </ListItem>
                     }
                 </For>
