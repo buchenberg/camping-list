@@ -2,62 +2,76 @@ import { createMutable } from "solid-js/store";
 import { ICampingItem } from "./ICampingItem";
 import localforage from "localforage";
 import { v4 as uuidv4 } from 'uuid';
+import { IItem } from "./IItem";
+import { eventBus } from "../App";
 
 localforage.config({
   driver: localforage.INDEXEDDB,
   name: 'campingList',
   version: 1.0,
-  storeName: 'camping_list_items',
-  description: 'some description'
+  storeName: 'camping_list_items'
 });
 
-export interface IItem {
-  key: string,
-  value: ICampingItem
-}
-
-const items: IItem[] = [];
+const persistedItems: IItem[] = [];
 
 export const campingItems = createMutable({
   items: await localforage.iterate(function (value: ICampingItem, key, iterationNumber) {
-    items.push({ key, value });
+    persistedItems.push({ key, value });
   }).then(function () {
-    return items;
+    return persistedItems;
   }),
   get count() {
     return this.items.length;
   },
   addItem(campingItem: ICampingItem) {
-    const item: IItem = { key: uuidv4(), value: campingItem }
+    if (this.items.find(x => x.key === campingItem.name)) {
+      eventBus.emit(`${campingItem.name} already exists!`);
+      return;
+    }
+    const item: IItem = { key: campingItem.name, value: campingItem }
     this.items.push(item);
-    localforage.setItem(item.key, item.value)
-      .then(function () {
-        return localforage.getItem(item.key);
-      }).then(function (value) {
-        console.log(value);
-      }).catch(function (err) {
-        console.log(err);
-      });
+    localforage.setItem(item.key, item.value).then(function (value) {
+      // Do other things once the value has been saved.
+      eventBus.emit(`${item.key} added!`);
+    }).catch(function (err) {
+      // This code runs if there were any errors
+      eventBus.emit(err);
+    });
   },
   editItem(campingItem: ICampingItem) {
-    //const index: ICampingItem = this.items.find((b: ICampingItem) => b.name === item.name);
-    //const myindex = this.items.findIndex((b: ICampingItem) => b.name === index.name);
-    //this.items[myindex] = item;
-    //window.localStorage.setItem("items", JSON.stringify(this.items));
+    const persistedItem = this.items.find((b: IItem) => b.key === campingItem.name);
+    if(!persistedItem){
+      eventBus.emit(`${campingItem.name} doesn't exist!`);
+      return;
+    }
+    const myindex = this.items.findIndex((b: IItem) => b.key === persistedItem.key);
+    this.items[myindex].value = campingItem;
+    localforage.setItem(campingItem.name, campingItem).then(function (value) {
+      // Do other things once the value has been saved.
+      eventBus.emit(`${campingItem.name} saved!`);
+    }).catch(function (err) {
+      // This code runs if there were any errors
+      eventBus.emit(err);
+    });
   },
   delete(key: string) {
     let newlist = this.items.filter((b: IItem) => b.key !== key);
     this.items = newlist;
     localforage.removeItem(key).then(function () {
       // Run this code once the key has been removed.
-      console.log('Key is cleared!');
+      eventBus.emit(`${key} deleted!`);
     }).catch(function (err) {
       // This code runs if there were any errors
-      console.log(err);
+      eventBus.emit(err);
     });
   },
   deleteAll() {
-    //this.items = [];
-    //window.localStorage.setItem("items", JSON.stringify(this.items));
+    this.items.length = 0;
+    localforage.clear().then(function () {
+      eventBus.emit(`List cleared!`);
+    }).catch(function (err) {
+      // This code runs if there were any errors
+      eventBus.emit(err);
+    });
   },
 });

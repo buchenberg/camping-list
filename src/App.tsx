@@ -1,17 +1,12 @@
-import { AppBar, BottomNavigation, BottomNavigationAction, Box, Card, CardContent, Container, createTheme, CssBaseline, Divider, FormControlLabel, Grid, Link, Stack, Switch, ThemeProvider, Toolbar, Typography } from "@suid/material";
+import { AppBar, BottomNavigation, BottomNavigationAction, Box, Container, createTheme, CssBaseline, Grid, Link, ThemeProvider, Toolbar, Typography } from "@suid/material";
 import CampingItemList from "./components/CampingItemList";
 import CampingListCounter from "./components/CampingListCounter";
 import { createEventBus } from "@solid-primitives/event-bus";
 import EventBusComponent from "./components/EventBusComponent";
 import { createSignal } from "solid-js";
-import { grey, purple } from "@suid/material/colors";
-import { Restore, Favorite, LocationOn, Light, DarkMode, LightMode } from "@suid/icons-material";
+import { DarkMode, LightMode } from "@suid/icons-material";
 
 export const eventBus = createEventBus<string>();
-
-
-
-
 
 const theme = createTheme({
   palette: {
@@ -59,11 +54,17 @@ export default function App() {
         >
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <EventBusComponent />
+            <Grid item xs={12}>
+            
+                <Typography variant="body1" gutterBottom>
+                  This application is a proof of concept using <Link href="https://www.solidjs.com/" target="none">SolidJs</Link>, <Link href="https://suid.io/" target="none">SUID</Link>, and <Link href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API" target="none">IndexedDb</Link> via <Link href="https://github.com/localForage/localForage" target="none">localForage</Link>
+                </Typography>
               </Grid>
               <Grid item xs={12}>
                 <CampingItemList />
+              </Grid>
+              <Grid item xs={12}>
+                <EventBusComponent />
               </Grid>
             </Grid>
           </Container>

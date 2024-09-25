@@ -18,17 +18,34 @@ import { createSignal, For } from "solid-js";
 import { ChangeEvent } from "@suid/types";
 import DeleteIcon from '@suid/icons-material/Delete';
 import AddIcon from '@suid/icons-material/Add';
+import EditIcon from '@suid/icons-material/Edit';
 import { ICampingItem } from "../store/ICampingItem";
-import { eventBus } from "../App";
-import { campingItems, IItem } from "../store/campingItems";
+import { campingItems } from "../store/campingItems";
+import { IItem } from "../store/IItem";
 
 export default function CampingItemList() {
     const [open, setOpen] = createSignal(false);
+    const [isEdit, setIsEdit] = createSignal(false);
     const handleOpen = () => setOpen(true);
+    const handleEdit = (item: IItem) => {
+        setIsEdit(true);
+        setNameValue(item.value.name);
+        setUomValue(item.value.uom);
+        setQtyValue(item.value.qty);
+        setOpen(true);
+    }
+    const clearValues = () => {
+        setNameValue("");
+        setUomValue("");
+        setQtyValue(0);
+    }
     const handleClose = () => {
+        clearValues();
+        setIsEdit(false);
         setIsSubmitting(false);
         setOpen(false);
     };
+
     const [nameValue, setNameValue] = createSignal<string>("");
     const [uomValue, setUomValue] = createSignal<string>("");
     const [qtyValue, setQtyValue] = createSignal<number>(0);
@@ -44,6 +61,9 @@ export default function CampingItemList() {
     const handleQtyInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         setQtyValue(Number(e.currentTarget.value));
 
+    const handleClearAll = () =>
+        campingItems.deleteAll();
+
     const handleSubmit = (event: SubmitEvent) => {
         event.preventDefault();
         setIsSubmitting(true);
@@ -56,8 +76,14 @@ export default function CampingItemList() {
             qty: qtyValue()
         }
 
-        campingItems.addItem(campingItem);
-        eventBus.emit(`${campingItem.name} added!`);
+        if (isEdit()) {
+            campingItems.editItem(campingItem);
+            setIsEdit(false);
+        } 
+        else {
+            campingItems.addItem(campingItem);
+        }
+        clearValues();
         setIsSubmitting(false);
         handleClose();
     }
@@ -77,26 +103,33 @@ export default function CampingItemList() {
                     {(item: IItem) =>
                         <ListItem
                             secondaryAction={
-                                <IconButton color="error" edge="end" aria-label="delete" onClick={() => {
+                                <div>
+                                <Button color="warning" aria-label="delete" onClick={() => {
                                     campingItems.delete(item.key);
-                                    eventBus.emit(`${item.value.name} deleted!`);
                                 }}>
                                     <DeleteIcon />
-                                </IconButton>
+                                </Button>
+                                <Button color="primary" aria-label="edit" onClick={() => handleEdit(item)}>
+                                    <EditIcon />
+                                </Button>
+                                </div>
                             }>
                             <ListItemText primary={
                                 <Typography variant="h6" gutterBottom>
                                     {item.value.name}
                                 </Typography>
-                            } secondary={`Qty: ${item.value.qty}`} />
+                            } secondary={`Qty: ${item.value.qty} ${item.value.uom}`} />
                         </ListItem>
                     }
                 </For>
             </List>
             <Box textAlign='center'>
-                <IconButton aria-label="add" onClick={handleOpen} color="success">
-                    <AddIcon />
-                </IconButton>
+                <Button aria-label="add item" onClick={handleOpen} color="primary">
+                    <AddIcon />Add New Item
+                </Button>
+                <Button aria-label="clear items" onClick={handleClearAll} color="warning">
+                    <DeleteIcon /> Clear All Items
+                </Button>
             </Box>
 
             <Dialog
@@ -105,16 +138,15 @@ export default function CampingItemList() {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle>Add Item</DialogTitle>
+                <DialogTitle>{isEdit() ? `Edit ${nameValue()}`: "Add Item"}</DialogTitle>
                 <form onSubmit={handleSubmit} noValidate>
                     <DialogContent>
                         <DialogContentText>
-                            Here is your chance to add an item to the list and not forget it.
-                        </DialogContentText>
-                        <DialogContentText>
                             <TextField
+                                value={nameValue()}
+                                disabled={isEdit()}
                                 autoFocus
-                                required
+                                required={!isEdit()}
                                 error={isSubmitting() && !nameValue()}
                                 margin="dense"
                                 id="name"
@@ -126,6 +158,7 @@ export default function CampingItemList() {
 
                             />
                             <TextField
+                                value={uomValue()}
                                 autoFocus
                                 required
                                 error={isSubmitting() && !uomValue()}
@@ -138,6 +171,7 @@ export default function CampingItemList() {
                                 onChange={e => handleUomInput(e)}
                             />
                             <TextField
+                                value={qtyValue()}
                                 autoFocus
                                 required
                                 error={isSubmitting() && !qtyValue()}

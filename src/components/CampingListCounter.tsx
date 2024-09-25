@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography } from "@suid/material";
+import { Typography } from "@suid/material";
 import { campingItems } from "../store/campingItems";
 
 export default function CampingListCounter() {
