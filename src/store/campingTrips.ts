@@ -1,20 +1,21 @@
 import { createMutable } from "solid-js/store";
-import { ICampingItem } from "./types";
 import localforage from "localforage";
-import { IPersistedCampingItem } from "./types";
+import { v4 as uuidv4 } from 'uuid';
+import { IPersistedCampingTrip } from "./types";
 import { eventBus } from "../App";
+import { ICampingTrip } from "./types";
 
 localforage.config({
   driver: localforage.INDEXEDDB,
   name: 'campingList',
   version: 1.0,
-  storeName: 'camping_list_items'
+  storeName: 'camping_trips'
 });
 
-const persistedItems: IPersistedCampingItem[] = [];
+const persistedItems: IPersistedCampingTrip[] = [];
 
 export const campingItems = createMutable({
-  items: await localforage.iterate(function (value: ICampingItem, key, iterationNumber) {
+  items: await localforage.iterate(function (value: ICampingTrip, key, iterationNumber) {
     persistedItems.push({ key, value });
   }).then(function () {
     return persistedItems;
@@ -22,12 +23,9 @@ export const campingItems = createMutable({
   get count() {
     return this.items.length;
   },
-  addItem(campingItem: ICampingItem) {
-    if (this.items.find(x => x.key === campingItem.name)) {
-      eventBus.emit(`${campingItem.name} already exists!`);
-      return;
-    }
-    const item: IPersistedCampingItem = { key: campingItem.name, value: campingItem }
+  addItem(trip: ICampingTrip) {
+
+    const item: IPersistedCampingTrip = { key: uuidv4(), value: trip }
     this.items.push(item);
     localforage.setItem(item.key, item.value).then(function (value) {
       // Do other things once the value has been saved.
@@ -37,24 +35,24 @@ export const campingItems = createMutable({
       eventBus.emit(err);
     });
   },
-  editItem(campingItem: ICampingItem) {
-    const persistedItem = this.items.find((b: IPersistedCampingItem) => b.key === campingItem.name);
+  editItem(trip: IPersistedCampingTrip) {
+    const persistedItem = this.items.find((b: IPersistedCampingTrip) => b.key === trip.key);
     if(!persistedItem){
-      eventBus.emit(`${campingItem.name} doesn't exist!`);
+      eventBus.emit(`${trip.key} doesn't exist!`);
       return;
     }
-    const myindex = this.items.findIndex((b: IPersistedCampingItem) => b.key === persistedItem.key);
-    this.items[myindex].value = campingItem;
-    localforage.setItem(campingItem.name, campingItem).then(function (value) {
+    const myindex = this.items.findIndex((b: IPersistedCampingTrip) => b.key === persistedItem.key);
+    this.items[myindex].value = trip.value;
+    localforage.setItem(trip.key, trip).then(function (value) {
       // Do other things once the value has been saved.
-      eventBus.emit(`${campingItem.name} saved!`);
+      eventBus.emit(`Trip ${value.key} saved!`);
     }).catch(function (err) {
       // This code runs if there were any errors
       eventBus.emit(err);
     });
   },
   delete(key: string) {
-    let newlist = this.items.filter((b: IPersistedCampingItem) => b.key !== key);
+    let newlist = this.items.filter((b: IPersistedCampingTrip) => b.key !== key);
     this.items = newlist;
     localforage.removeItem(key).then(function () {
       // Run this code once the key has been removed.

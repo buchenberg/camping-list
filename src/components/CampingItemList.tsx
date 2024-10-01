@@ -1,33 +1,14 @@
-import {
-    Paper,
-    Typography,
-    List,
-    ListItem,
-    ListItemText,
-    Button,
-    TextField,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    IconButton,
-    Box
-} from "@suid/material";
+
 import { createSignal, For } from "solid-js";
-import { ChangeEvent } from "@suid/types";
-import DeleteIcon from '@suid/icons-material/Delete';
-import AddIcon from '@suid/icons-material/Add';
-import EditIcon from '@suid/icons-material/Edit';
-import { ICampingItem } from "../store/ICampingItem";
 import { campingItems } from "../store/campingItems";
-import { IItem } from "../store/IItem";
+import { ICampingItem, IPersistedCampingItem } from "../store/types";
+import { Button, Card, ListGroup, Tab, Tabs } from "solid-bootstrap";
 
 export default function CampingItemList() {
     const [open, setOpen] = createSignal(false);
     const [isEdit, setIsEdit] = createSignal(false);
     const handleOpen = () => setOpen(true);
-    const handleEdit = (item: IItem) => {
+    const handleEdit = (item: IPersistedCampingItem) => {
         setIsEdit(true);
         setNameValue(item.value.name);
         setUomValue(item.value.uom);
@@ -52,14 +33,14 @@ export default function CampingItemList() {
 
     const [isSubmitting, setIsSubmitting] = createSignal<boolean>(false);
 
-    const handleNameInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-        setNameValue(e.currentTarget.value);
+    // const handleNameInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    //     setNameValue(e.currentTarget.value);
 
-    const handleUomInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-        setUomValue(e.currentTarget.value);
+    // const handleUomInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    //     setUomValue(e.currentTarget.value);
 
-    const handleQtyInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-        setQtyValue(Number(e.currentTarget.value));
+    // const handleQtyInput = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    //     setQtyValue(Number(e.currentTarget.value));
 
     const handleClearAll = () =>
         campingItems.deleteAll();
@@ -79,7 +60,7 @@ export default function CampingItemList() {
         if (isEdit()) {
             campingItems.editItem(campingItem);
             setIsEdit(false);
-        } 
+        }
         else {
             campingItems.addItem(campingItem);
         }
@@ -89,110 +70,137 @@ export default function CampingItemList() {
     }
 
     return (
-        <Paper
-            sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-            }}>
-            <Typography variant="h6" gutterBottom>
-                Camping Items
-            </Typography>
-            <List>
-                <For each={campingItems.items}>
-                    {(item: IItem) =>
-                        <ListItem
-                            secondaryAction={
-                                <div>
-                                <Button color="warning" aria-label="delete" onClick={() => {
-                                    campingItems.delete(item.key);
-                                }}>
-                                    <DeleteIcon />
-                                </Button>
-                                <Button color="primary" aria-label="edit" onClick={() => handleEdit(item)}>
-                                    <EditIcon />
-                                </Button>
-                                </div>
-                            }>
-                            <ListItemText primary={
-                                <Typography variant="h6" gutterBottom>
-                                    {item.value.name}
-                                </Typography>
-                            } secondary={`Qty: ${item.value.qty} ${item.value.uom}`} />
-                        </ListItem>
-                    }
-                </For>
-            </List>
-            <Box textAlign='center'>
-                <Button aria-label="add item" onClick={handleOpen} color="primary">
-                    <AddIcon />Add New Item
-                </Button>
-                <Button aria-label="clear items" onClick={handleClearAll} color="warning">
-                    <DeleteIcon /> Clear All Items
-                </Button>
-            </Box>
+        <Card>
+            <Card.Header>Camping Items</Card.Header>
+            <Card.Body>
+                <ListGroup>
+                    <For each={campingItems.items}>
+                        {(item: IPersistedCampingItem) =>
+                            <ListGroup.Item>
+                                {item.value.name}
+                            </ListGroup.Item>
+                        }
+                    </For>
+                </ListGroup>
+                <Button variant="success" aria-label="add item" onClick={handleOpen} class="m-1">
+                     Add New Item
+                 </Button>
+                 <Button variant="danger" aria-label="clear items" onClick={handleClearAll} class="m-1">
+                    Clear All Items
+                 </Button>
+            </Card.Body>
 
-            <Dialog
-                open={open()}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle>{isEdit() ? `Edit ${nameValue()}`: "Add Item"}</DialogTitle>
-                <form onSubmit={handleSubmit} noValidate>
-                    <DialogContent>
-                        <DialogContentText>
-                            <TextField
-                                value={nameValue()}
-                                disabled={isEdit()}
-                                autoFocus
-                                required={!isEdit()}
-                                error={isSubmitting() && !nameValue()}
-                                margin="dense"
-                                id="name"
-                                name="name"
-                                label="Name"
-                                fullWidth
-                                variant="standard"
-                                onChange={e => handleNameInput(e)}
+        </Card>
+        // <Paper
+        //     sx={{
+        //         p: 2,
+        //         display: 'flex',
+        //         flexDirection: 'column',
+        //     }}>
+        //     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        //     </Box>
+        //     <div>
+        //         <md-radio name="group"></md-radio>
+        //         <md-radio name="group"></md-radio>
+        //     </div>
+        //     <Typography variant="h6" gutterBottom>
+        //         Camping Items
+        //     </Typography>
+        //     <List>
+        //         <For each={campingItems.items}>
+        //             {(item: IPersistedCampingItem) =>
+        //                 <ListItem
+        //                     secondaryAction={
+        //                         <div>
+        //                             <Button color="warning" aria-label="delete" onClick={() => {
+        //                                 campingItems.delete(item.key);
+        //                             }}>
+        //                                 <DeleteIcon />
+        //                             </Button>
+        //                             <Button color="primary" aria-label="edit" onClick={() => handleEdit(item)}>
+        //                                 <EditIcon />
+        //                             </Button>
+        //                         </div>
+        //                     }>
+        //                     <ListItemText primary={
+        //                         <Typography variant="h6" gutterBottom>
+        //                             {item.value.name}
+        //                         </Typography>
+        //                     } secondary={`Qty: ${item.value.qty} ${item.value.uom}`} />
+        //                 </ListItem>
+        //             }
+        //         </For>
+        //     </List>
+        //     <Box textAlign='center'>
+        //         <Button aria-label="add item" onClick={handleOpen} color="primary">
+        //             <AddIcon />Add New Item
+        //         </Button>
+        //         <Button aria-label="clear items" onClick={handleClearAll} color="warning">
+        //             <DeleteIcon /> Clear All Items
+        //         </Button>
+        //     </Box>
 
-                            />
-                            <TextField
-                                value={uomValue()}
-                                autoFocus
-                                required
-                                error={isSubmitting() && !uomValue()}
-                                margin="dense"
-                                id="uom"
-                                name="uom"
-                                label="Unit of Measure"
-                                fullWidth
-                                variant="standard"
-                                onChange={e => handleUomInput(e)}
-                            />
-                            <TextField
-                                value={qtyValue()}
-                                autoFocus
-                                required
-                                error={isSubmitting() && !qtyValue()}
-                                margin="dense"
-                                id="qty"
-                                name="qty"
-                                label="Quantity"
-                                type="number"
-                                fullWidth
-                                variant="standard"
-                                onChange={e => handleQtyInput(e)}
-                            />
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleClose}>Cancel</Button>
-                        <Button type="submit">Submit</Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
-        </Paper>
+        //     <Dialog
+        //         open={open()}
+        //         onClose={handleClose}
+        //         aria-labelledby="alert-dialog-title"
+        //         aria-describedby="alert-dialog-description"
+        //     >
+        //         <DialogTitle>{isEdit() ? `Edit ${nameValue()}` : "Add Item"}</DialogTitle>
+        //         <form onSubmit={handleSubmit} noValidate>
+        //             <DialogContent>
+        //                 <DialogContentText>
+        //                     <TextField
+        //                         value={nameValue()}
+        //                         disabled={isEdit()}
+        //                         autoFocus
+        //                         required={!isEdit()}
+        //                         error={isSubmitting() && !nameValue()}
+        //                         margin="dense"
+        //                         id="name"
+        //                         name="name"
+        //                         label="Name"
+        //                         fullWidth
+        //                         variant="standard"
+        //                         onChange={e => handleNameInput(e)}
+
+        //                     />
+        //                     <TextField
+        //                         value={uomValue()}
+        //                         autoFocus
+        //                         required
+        //                         error={isSubmitting() && !uomValue()}
+        //                         margin="dense"
+        //                         id="uom"
+        //                         name="uom"
+        //                         label="Unit of Measure"
+        //                         fullWidth
+        //                         variant="standard"
+        //                         onChange={e => handleUomInput(e)}
+        //                     />
+        //                     <TextField
+        //                         value={qtyValue()}
+        //                         autoFocus
+        //                         required
+        //                         error={isSubmitting() && !qtyValue()}
+        //                         margin="dense"
+        //                         id="qty"
+        //                         name="qty"
+        //                         label="Quantity"
+        //                         type="number"
+        //                         fullWidth
+        //                         variant="standard"
+        //                         onChange={e => handleQtyInput(e)}
+        //                     />
+        //                 </DialogContentText>
+        //             </DialogContent>
+        //             <DialogActions>
+        //                 <Button onClick={handleClose}>Cancel</Button>
+        //                 <Button type="submit">Submit</Button>
+        //             </DialogActions>
+        //         </form>
+        //     </Dialog>
+        // </Paper>
     )
 }
 

@@ -1,4 +1,3 @@
-import { Alert, Box, Fade } from "@suid/material";
 import { createSignal, onCleanup, Show } from "solid-js";
 import { eventBus } from "../App";
 
@@ -20,11 +19,11 @@ export default function EventBusComponent() {
 
 
 
-    return <Fade in={message().message !== undefined}>
-        <Alert severity="info" onClose={() => {
+    return <div>
+        {/* <div severity="info" onClose={() => {
             setMessage({ message: undefined });
-        }}>{message().message}</Alert>
-    </Fade>
+        }}>{message().message}</div> */}
+    </div>
 
 
 }
