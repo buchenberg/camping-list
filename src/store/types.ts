@@ -9,7 +9,7 @@ export interface ICampingTrip {
   location: string;
   dateStart: Date;
   dateEnd: Date;
-  items: ICampingItem[]
+  items: string[]
 }
 
 export interface IPersistedObject {
