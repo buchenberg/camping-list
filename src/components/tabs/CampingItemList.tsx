@@ -2,7 +2,7 @@
 import { createSignal, For } from "solid-js";
 import { campingItemStore } from "../../store/campingItemStore";
 import { ICampingItem, IPersistedCampingItem } from "../../store/types";
-import { Alert, Button, Col, Form, Modal, Row, Table } from "solid-bootstrap";
+import { Alert, Button, Col, Container, Form, Modal, Row, Table } from "solid-bootstrap";
 import { BsPencil, BsTrash } from "solid-icons/bs";
 import { FiEdit, FiTrash } from "solid-icons/fi";
 
@@ -76,54 +76,56 @@ export default function CampingItemList() {
 
     return (
         <>
-            <p>You can add camping items here. Go ahead. all the cool kids are doing it.</p>
+            <Container>
+                <p>You can add camping items here. Go ahead. all the cool kids are doing it.</p>
 
 
-            {campingItemStore.count > 0 ?
-                <Table striped borderless>
-                    <thead>
-                        <tr>
-                            <th>Item Name</th>
-                            <th>Unit of Measure</th>
-                            <th>Quantity</th>
-                            <th style="width: 10%"/>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <For each={campingItemStore.items}>
-                            {(item: IPersistedCampingItem) =>
-                                <tr onClick={(e) => console.log(e)}>
-                                    <td>{item.value.name}</td>
-                                    <td>{item.value.uom}</td>
-                                    <td>{item.value.qty}</td>
-                                    <td>
-                                        <FiTrash onClick={() => handleDelete(item)} class="click-icon m-1" color="red"/>
-                                        <FiEdit onClick={() => handleEdit(item)} class="click-icon m-1" color="green"/>
-                                    </td>
-                                </tr>
+                {campingItemStore.count > 0 ?
+                    <Table striped borderless>
+                        <thead>
+                            <tr>
+                                <th>Item Name</th>
+                                <th>Unit of Measure</th>
+                                <th>Quantity</th>
+                                <th style="width: 10%" />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <For each={campingItemStore.items}>
+                                {(item: IPersistedCampingItem) =>
+                                    <tr onClick={(e) => console.log(e)}>
+                                        <td>{item.value.name}</td>
+                                        <td>{item.value.uom}</td>
+                                        <td>{item.value.qty}</td>
+                                        <td>
+                                            <FiTrash onClick={() => handleDelete(item)} class="click-icon m-1" color="red" />
+                                            <FiEdit onClick={() => handleEdit(item)} class="click-icon m-1" color="green" />
+                                        </td>
+                                    </tr>
 
-                            }
-                        </For>
-                    </tbody>
-                </Table>
-                :
-                <Alert variant="dark">
-                    <Alert.Heading>No items</Alert.Heading>
-                    <p>Add an item and it will show up here.</p>
-                </Alert>
-            }
-
-            <div>
-                <Button variant="primary" aria-label="add item" onClick={handleOpen} class="me-2">
-                    Add New Item
-                </Button>
-                {campingItemStore.count > 0 &&
-                    <Button variant="secondary" aria-label="clear items" onClick={handleClearAll} >
-                        Clear All Items
-                    </Button>
+                                }
+                            </For>
+                        </tbody>
+                    </Table>
+                    :
+                    <Alert variant="dark">
+                        <Alert.Heading>No items</Alert.Heading>
+                        <p>Add an item and it will show up here.</p>
+                    </Alert>
                 }
 
-            </div>
+                <div>
+                    <Button variant="primary" aria-label="add item" onClick={handleOpen} class="me-2">
+                        Add New Item
+                    </Button>
+                    {campingItemStore.count > 0 &&
+                        <Button variant="secondary" aria-label="clear items" onClick={handleClearAll} >
+                            Clear All Items
+                        </Button>
+                    }
+
+                </div>
+            </Container>
 
 
 

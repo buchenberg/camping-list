@@ -1,8 +1,9 @@
 
 import { createSignal, For } from "solid-js";
 import { campingTripStore } from "../../store/campingTripStore";
-import { ICampingTrip, IPersistedCampingTrip } from "../../store/types";
-import { Alert, Button, Form, Modal, Table } from "solid-bootstrap";
+import { ICampingTrip, IPersistedCampingItem, IPersistedCampingTrip } from "../../store/types";
+import { Alert, Button, Container, Form, Modal, Table } from "solid-bootstrap";
+import { campingItemStore } from "../../store/campingItemStore";
 
 export default function CampingTripList() {
     const [open, setOpen] = createSignal(false);
@@ -73,43 +74,45 @@ export default function CampingTripList() {
 
     return (
         <>
-            <p>You can add camping items here. Go ahead. all the cool kids are doing it.</p>
-            {campingTripStore.count > 0 ?
-                <Table striped borderless>
-                    <thead>
-                        <tr>
-                            <th>Location</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th style="width:  10%"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <For each={campingTripStore.items}>
-                            {(item: IPersistedCampingTrip) =>
-                                <tr>
-                                    <td>{item.value.location}</td>
-                                    <td>{item.value.dateStart}</td>
-                                    <td>{item.value.dateEnd}</td>
-                                    <td><Button onClick={() => handleEdit(item)} class="float-end">Edit</Button></td>
-                                </tr>
+            <Container>
+                <p>You can add camping items here. Go ahead. all the cool kids are doing it.</p>
+                {campingTripStore.count > 0 ?
+                    <Table striped borderless>
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th style="width:  10%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <For each={campingTripStore.items}>
+                                {(item: IPersistedCampingTrip) =>
+                                    <tr>
+                                        <td>{item.value.location}</td>
+                                        <td>{item.value.dateStart}</td>
+                                        <td>{item.value.dateEnd}</td>
+                                        <td><Button onClick={() => handleEdit(item)} class="float-end">Edit</Button></td>
+                                    </tr>
 
-                            }
-                        </For>
-                    </tbody>
-                </Table>
-                :
-                <Alert variant="dark">
-                    <Alert.Heading>No trips</Alert.Heading>
-                    <p>Add a camping trip and it will show up here.</p>
-                </Alert>
-            }
-            <Button variant="primary" aria-label="add item" onClick={handleOpen} class="m-1">
-                Add New Trip
-            </Button>
-            <Button variant="secondary" aria-label="clear items" onClick={handleClearAll} class="m-1">
-                Clear All Trips
-            </Button>
+                                }
+                            </For>
+                        </tbody>
+                    </Table>
+                    :
+                    <Alert variant="dark">
+                        <Alert.Heading>No trips</Alert.Heading>
+                        <p>Add a camping trip and it will show up here.</p>
+                    </Alert>
+                }
+                <Button variant="primary" aria-label="add item" onClick={handleOpen} class="m-1">
+                    Add New Trip
+                </Button>
+                <Button variant="secondary" aria-label="clear items" onClick={handleClearAll} class="m-1">
+                    Clear All Trips
+                </Button>
+            </Container>
 
             <Modal show={open()} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -133,6 +136,21 @@ export default function CampingTripList() {
                     <Form.Group class="mb-3" controlId="formCampingTrip">
                         <Form.Label>End Date</Form.Label>
                         <Form.Control type="date" placeholder="Enter trip end date" value={endDateValue()} onChange={e => handleEndDateInput(e)} />
+                        <Form.Text class="text-muted">
+                            Blah.
+                        </Form.Text>
+                    </Form.Group>
+                    <Form.Group class="mb-3" controlId="formCampingTrip">
+                        <Form.Label>Items</Form.Label>
+                        <Form.Select value={""} onChange={e => { }} >
+                            <option value={""}>Select an item...</option>
+                            <For each={campingItemStore.items}>
+                                {(item: IPersistedCampingItem) =>
+                                    <option value={item.key}>{item.value.qty} {item.value.name}</option>
+
+                                }
+                            </For>
+                        </Form.Select>
                         <Form.Text class="text-muted">
                             Blah.
                         </Form.Text>
