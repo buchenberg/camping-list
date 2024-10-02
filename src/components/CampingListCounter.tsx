@@ -1,8 +1,10 @@
 
-import { campingItems } from "../store/campingItems";
+import { campingItemStore } from "../store/campingItemStore";
 
 export default function CampingListCounter() {
     return (
-            <div>{campingItems.count} Camping Items</div>
+        <>
+            {campingItemStore.count} Camping Items
+        </>
     )
 }

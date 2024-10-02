@@ -1,8 +1,10 @@
 
 import { createSignal, For } from "solid-js";
-import { campingItems } from "../../store/campingItems";
+import { campingItemStore } from "../../store/campingItemStore";
 import { ICampingItem, IPersistedCampingItem } from "../../store/types";
-import { Alert, Button, Card, Container, Form, ListGroup, Modal, Tab, Table, Tabs } from "solid-bootstrap";
+import { Alert, Button, Col, Form, Modal, Row, Table } from "solid-bootstrap";
+import { BsPencil, BsTrash } from "solid-icons/bs";
+import { FiEdit, FiTrash } from "solid-icons/fi";
 
 export default function CampingItemList() {
     const [open, setOpen] = createSignal(false);
@@ -14,6 +16,9 @@ export default function CampingItemList() {
         setUomValue(item.value.uom);
         setQtyValue(item.value.qty);
         setOpen(true);
+    }
+    const handleDelete = (item: IPersistedCampingItem) => {
+        campingItemStore.delete(item.key);
     }
     const clearValues = () => {
         setNameValue("");
@@ -44,7 +49,7 @@ export default function CampingItemList() {
         setQtyValue(Number(e.currentTarget.value));
 
     const handleClearAll = () =>
-        campingItems.deleteAll();
+        campingItemStore.deleteAll();
 
     const handleSubmit = () => {
         setIsSubmitting(true);
@@ -58,11 +63,11 @@ export default function CampingItemList() {
         }
 
         if (isEdit()) {
-            campingItems.editItem(campingItem);
+            campingItemStore.editItem(campingItem);
             setIsEdit(false);
         }
         else {
-            campingItems.addItem(campingItem);
+            campingItemStore.addItem(campingItem);
         }
         clearValues();
         setIsSubmitting(false);
@@ -72,52 +77,55 @@ export default function CampingItemList() {
     return (
         <>
             <p>You can add camping items here. Go ahead. all the cool kids are doing it.</p>
-         
-             
-                        {campingItems.count > 0 ?
-                            <Table striped borderless>
-                                <thead>
-                                    <tr>
-                                        <th style="width:  50%">Item Name</th>
-                                        <th style="width:  25%">Unit of Measure</th>
-                                        <th style="width:  15%">Quantity</th>
-                                        <th style="width:  10%"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <For each={campingItems.items}>
-                                        {(item: IPersistedCampingItem) =>
-                                            <tr onClick={(e) => console.log(e)}>
-                                                <td>{item.value.name}</td>
-                                                <td>{item.value.uom}</td>
-                                                <td>{item.value.qty}</td>
-                                                <td><Button onClick={() => handleEdit(item)} class="float-end">Edit</Button></td>
-                                            </tr>
 
-                                        }
-                                    </For>
-                                </tbody>
-                            </Table>
-                            :
-                            <Alert variant="dark">
-                                <Alert.Heading>No items</Alert.Heading>
-                                <p>Add an item and it will show up here.</p>
-                            </Alert>
-                        }
 
-                        <div>
-                            <Button variant="primary" aria-label="add item" onClick={handleOpen} class="me-2">
-                                Add New Item
-                            </Button>
-                            {campingItems.count > 0 &&
-                                <Button variant="secondary" aria-label="clear items" onClick={handleClearAll} >
-                                    Clear All Items
-                                </Button>
+            {campingItemStore.count > 0 ?
+                <Table striped borderless>
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Unit of Measure</th>
+                            <th>Quantity</th>
+                            <th style="width: 10%"/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <For each={campingItemStore.items}>
+                            {(item: IPersistedCampingItem) =>
+                                <tr onClick={(e) => console.log(e)}>
+                                    <td>{item.value.name}</td>
+                                    <td>{item.value.uom}</td>
+                                    <td>{item.value.qty}</td>
+                                    <td>
+                                        <FiTrash onClick={() => handleDelete(item)} class="click-icon m-1" color="red"/>
+                                        <FiEdit onClick={() => handleEdit(item)} class="click-icon m-1" color="green"/>
+                                    </td>
+                                </tr>
+
                             }
+                        </For>
+                    </tbody>
+                </Table>
+                :
+                <Alert variant="dark">
+                    <Alert.Heading>No items</Alert.Heading>
+                    <p>Add an item and it will show up here.</p>
+                </Alert>
+            }
 
-                        </div>
+            <div>
+                <Button variant="primary" aria-label="add item" onClick={handleOpen} class="me-2">
+                    Add New Item
+                </Button>
+                {campingItemStore.count > 0 &&
+                    <Button variant="secondary" aria-label="clear items" onClick={handleClearAll} >
+                        Clear All Items
+                    </Button>
+                }
 
-               
+            </div>
+
+
 
             <Modal show={open()} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -149,7 +157,7 @@ export default function CampingItemList() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-                    <Button variant="primary" onClick={handleSubmit}>Submit</Button>
+                    <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting()}>Submit</Button>
                 </Modal.Footer>
             </Modal>
         </>

@@ -7,8 +7,8 @@ export interface ICampingItem {
 
 export interface ICampingTrip {
   location: string;
-  dateStart: Date;
-  dateEnd: Date;
+  dateStart: string;
+  dateEnd: string;
   items: string[]
 }
 

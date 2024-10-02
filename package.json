@@ -26,6 +26,7 @@
     "@solid-primitives/storage": "^4.2.1",
     "localforage": "^1.10.0",
     "solid-bootstrap": "^1.0.20",
+    "solid-icons": "^1.1.0",
     "solid-js": "^1.8.11",
     "uuid": "^10.0.0"
   }

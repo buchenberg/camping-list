@@ -9,3 +9,12 @@ body {
   height: 100vh; 
   display:'';
 }
+
+.click-icon {
+  transition: all .2s ease-in-out; 
+}
+
+.click-icon:hover {
+  cursor: pointer;
+  transform: scale(1.5);
+}
