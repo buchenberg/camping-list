@@ -42,7 +42,6 @@ export default function App() {
                 <Tab eventKey="home" title="Home" />
                 <Tab eventKey="items" title="Camping Items" />
                 <Tab eventKey="trips" title="Camping Trips" />
-                
               </Tabs>
             </Card.Header>
             <Card.Body>
