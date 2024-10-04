@@ -1,0 +1,12 @@
+{
+    "camping_list_title": "Lista de Acampada",
+    "camping_list_header": "Puede agregar artículos para acampar aquí. Adelante. Todos los chicos geniales lo están haciendo.",
+    "home_tab_header": "Hogar",
+    "camping_item_list_tab_header": "Artículos Para Acampar",
+    "camping_trip_list_tab_header": "Viajes De Campamento",
+    "item_name_table_header": "Nombre del Artículo",
+    "uom_table_header": "Unidad de Medida",
+    "qty_table_header": "Cantidad",
+    "add_new_item": "Agregar Nuevo Artículo",
+    "clear_all_items": "Borrar Todos Los Artículos"
+}

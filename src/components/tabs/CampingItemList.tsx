@@ -2,11 +2,12 @@
 import { createSignal, For } from "solid-js";
 import { campingItemStore } from "../../store/campingItemStore";
 import { ICampingItem, IPersistedCampingItem } from "../../store/types";
-import { Alert, Button, Col, Container, Form, Modal, Row, Table } from "solid-bootstrap";
-import { BsPencil, BsTrash } from "solid-icons/bs";
+import { Alert, Button, Container, Form, Modal, Table } from "solid-bootstrap";
 import { FiEdit, FiTrash } from "solid-icons/fi";
+import { useTransContext } from "@mbarzda/solid-i18next";
 
 export default function CampingItemList() {
+    const [t] = useTransContext();
     const [open, setOpen] = createSignal(false);
     const [isEdit, setIsEdit] = createSignal(false);
     const handleOpen = () => setOpen(true);
@@ -77,16 +78,14 @@ export default function CampingItemList() {
     return (
         <>
             <Container>
-                <p>You can add camping items here. Go ahead. all the cool kids are doing it.</p>
-
-
+                <p>{t("camping_list_header")}</p>
                 {campingItemStore.count > 0 ?
                     <Table striped borderless>
                         <thead>
                             <tr>
-                                <th>Item Name</th>
-                                <th>Unit of Measure</th>
-                                <th>Quantity</th>
+                                <th>{t("item_name_table_header")}</th>
+                                <th>{t("uom_table_header")}</th>
+                                <th>{t("qty_table_header")}</th>
                                 <th style="width: 10%" />
                             </tr>
                         </thead>
@@ -116,11 +115,11 @@ export default function CampingItemList() {
 
                 <div>
                     <Button variant="primary" aria-label="add item" onClick={handleOpen} class="me-2">
-                        Add New Item
+                    {t("add_new_item")}
                     </Button>
                     {campingItemStore.count > 0 &&
                         <Button variant="secondary" aria-label="clear items" onClick={handleClearAll} >
-                            Clear All Items
+                            {t("clear_all_items")}
                         </Button>
                     }
 

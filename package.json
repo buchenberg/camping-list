@@ -5,6 +5,7 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
+    "prebuild": "rimraf dist",
     "build": "vite build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
@@ -22,8 +23,11 @@
     "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
+    "@mbarzda/solid-i18next": "^1.4.1",
     "@solid-primitives/event-bus": "^1.0.11",
     "@solid-primitives/storage": "^4.2.1",
+    "i18next": "^23.15.1",
+    "i18next-http-backend": "^2.6.2",
     "localforage": "^1.10.0",
     "solid-bootstrap": "^1.0.20",
     "solid-icons": "^1.1.0",

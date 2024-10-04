@@ -1,0 +1,12 @@
+{
+    "camping_list_title": "Camping List",
+    "camping_list_header": "You can add camping items here. Go ahead. All the cool kids are doing it.",
+    "home_tab_header": "Home",
+    "camping_item_list_tab_header": "Camping Items",
+    "camping_trip_list_tab_header": "Camping Trips",
+    "item_name_table_header": "Item Name",
+    "uom_table_header": "Unit of Measure",
+    "qty_table_header": "Quantity",
+    "add_new_item": "Add New Item",
+    "clear_all_items": "Clear All Items"
+}

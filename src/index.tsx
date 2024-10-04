@@ -1,5 +1,6 @@
 /* @refresh reload */
 import { render } from 'solid-js/web';
+import { TransProvider } from "@mbarzda/solid-i18next";
 
 import './index.css';
 import App from './App';
@@ -12,4 +13,8 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-render(() => <App />, root!);
+render(() =>
+  <TransProvider lng="en-US">
+    <App />
+  </TransProvider>,
+  root!);
